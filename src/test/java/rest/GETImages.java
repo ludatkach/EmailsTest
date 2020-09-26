@@ -20,10 +20,10 @@ class GETImages {
 	private WebTestClient client;
 	private String baseURL;
 	
-	public String getRandomCatURL() {
+	public String getRandomURL( String url, String responseAttribute) {
         HttpClient client = HttpClient.newBuilder().followRedirects(Redirect.NORMAL).build();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://aws.random.cat/meow"))
+                .uri(URI.create(url))
                 .build();
 
 		try {
@@ -32,50 +32,7 @@ class GETImages {
 			        HttpResponse.BodyHandlers.ofString());
 			
 			JSONObject responseJSON = new JSONObject(response.body());
-			return responseJSON.getString("file");
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	
-		return "";
-	}
-	
-	public String getRandomDogURL() {
-		HttpClient client = HttpClient.newBuilder().followRedirects(Redirect.NORMAL).build();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://random.dog/woof.json"))
-                .build();
-
-		try {
-	        HttpResponse<String> response;
-			response = client.send(request,
-			        HttpResponse.BodyHandlers.ofString());
-			
-			JSONObject responseJSON = new JSONObject(response.body());
-			return responseJSON.getString("url");
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	
-		return "";
-	}
-	
-	public String getRandomFoxURL() {
-		HttpClient client = HttpClient.newBuilder().followRedirects(Redirect.NORMAL).build();
-        
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://randomfox.ca/floof/"))
-                .build();
-
-		try {
-	        HttpResponse<String> response;
-			response = client.send(request,
-			        HttpResponse.BodyHandlers.ofString());
-			
-			JSONObject responseJSON = new JSONObject(response.body());
-			return responseJSON.getString("image");
+			return responseJSON.getString(responseAttribute);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -86,69 +43,18 @@ class GETImages {
 	
 	@Test
 	void TestGetCatUrl() {
-		System.out.println(getRandomCatURL());
+		System.out.println(getRandomURL("http://aws.random.cat/meow", "file"));
 	}
 		
 	@Test
 	void TestGetDogUrl() {
-		System.out.println(getRandomDogURL());
+		System.out.println(getRandomURL("https://random.dog/woof.json", "url"));
 	}
 	
 	@Test
 	void TestGetFoxUrl() {
-		System.out.println(getRandomFoxURL());
+		System.out.println(getRandomURL("http://randomfox.ca/floof/", "image"));
 	}
 	
-	
-
-//	/*
-//	 * @Test void GETCatUrl() { baseURL = "http://aws.random.cat"; client =
-//	 * WebTestClient.bindToServer() .baseUrl(baseURL) .build();
-//	 * 
-//	 * EntityExchangeResult<String> catUrl = client.get() .uri("/meow")
-//	 * .accept(MediaType.APPLICATION_JSON) .exchange() .expectStatus() .isOk()
-//	 * .expectHeader().contentType(MediaType.APPLICATION_JSON)
-//	 * .expectBody(String.class) .returnResult();
-//	 * System.out.println(catUrl.getResponseBody()); }
-//	 */
-//	
-//	@Test
-//	void GETDogUrl() {
-//		baseURL = "https://random.dog";
-//		client = WebTestClient.bindToServer().baseUrl(baseURL).build();
-//
-//		try {
-//			EntityExchangeResult<String> dogUrl1 = client.get().uri("/woof.json")
-//					.exchange()
-//					.expectBody(String.class).returnResult();
-//			
-//			JSONObject responseJSON = new JSONObject(dogUrl1.getResponseBody());
-//			String sURL = responseJSON.getString("url");
-//			System.out.println(sURL);
-//			
-//		} catch (Exception e) {
-//			System.out.println(e.getMessage());
-//		}
-//
-//		// expectStatus().isOk().expectHeader().
-//		EntityExchangeResult<String> dogUrl = client.get().uri("/woof.json").accept(MediaType.APPLICATION_JSON)
-//				.exchange().expectHeader().contentType(MediaType.APPLICATION_JSON).expectBody(String.class)
-//				.returnResult();
-//
-//		JSONObject responseJSON = new JSONObject(dogUrl.getResponseBody());
-//		String sURL = responseJSON.getString("url");
-//		System.out.println(sURL);
-//	}
-//
-//	@Test
-//	void GETFoxUrl() {
-//		baseURL = "http://randomfox.ca";
-//		client = WebTestClient.bindToServer().baseUrl(baseURL).build();
-//
-//		EntityExchangeResult<String> foxUrl = client.get().uri("/floof/").accept(MediaType.APPLICATION_JSON).exchange()
-//				.expectStatus().isOk().expectHeader().contentType(MediaType.APPLICATION_JSON).expectBody(String.class)
-//				.returnResult();
-//		System.out.println(foxUrl.getResponseBody());
-//	}
 
 }
