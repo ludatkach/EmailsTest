@@ -1,10 +1,14 @@
 package com.lut;
+import rest.GETImages;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.platform.runner.JUnitPlatform;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.AfterClass;
@@ -91,5 +95,36 @@ public class EmailsTestPositive {
 		new WebDriverWait(driver, 40)
 				.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name=\"subjectbox\"]")));
 		driver.findElement(By.xpath("//input[@name=\"subjectbox\"]")).sendKeys("My favorite animals");
+		
+		//get urls 
+		GETImages urlImage = new GETImages();
+		String catImage = urlImage.getRandomURL("http://aws.random.cat/meow", "file");
+		String dogImage = urlImage.getRandomURL("https://random.dog/woof.json", "url");
+		String foxImage = urlImage.getRandomURL("http://randomfox.ca/floof/", "image");
+		
+		driver.findElement(By.xpath("//div[@class=\"Am Al editable LW-avf tS-tW\"]")).sendKeys(catImage + "\n" + 
+				dogImage + "\n" + foxImage + "\n");
+		driver.findElement(By.xpath("//div[text()=\"Send\"]")).click();
+		new WebDriverWait(driver, 40)
+		    .until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[text()=\"Message sent.\"]")));
+		
+		//assertTrue(driver.findElement(By.xpath("//div[@class=\"vh\"]//span[@class=\"aT\"]")).isDisplayed(),true);
+	}
+	
+	@Order(3)
+	@Test
+	public void testGetnadaResiveAndCheckEmail() {
+//		Set<String> allWindowHandles = driver.getWindowHandles(); 
+//		allWindowHandles.SwitchTo("https://getnada.com");
+		driver.get("https://getnada.com");
+		new WebDriverWait(driver, 40)
+			.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[@class=\"msg_item\"]")));
+		driver.findElement(By.xpath("//li[@class=\"msg_item\"]")).click();
+		new WebDriverWait(driver, 40)
+			.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//iframe[@id=\"idIframe\"]")));
+		WebElement emailFrame = driver.findElement(By.xpath("//iframe[@id=\"idIframe\"]"));
+		//switch windows
+		new WebDriverWait(driver, 40)
+			.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[text()=\"' + catImage + '\"]'")));
 	}
 }

@@ -15,7 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-class GETImages {
+public class GETImages {
 
 	private WebTestClient client;
 	private String baseURL;
@@ -39,22 +39,6 @@ class GETImages {
 		}
 	
 		return "";
-	}
-	
-	@Test
-	void TestGetCatUrl() {
-		System.out.println(getRandomURL("http://aws.random.cat/meow", "file"));
-	}
-		
-	@Test
-	void TestGetDogUrl() {
-		System.out.println(getRandomURL("https://random.dog/woof.json", "url"));
-	}
-	
-	@Test
-	void TestGetFoxUrl() {
-		System.out.println(getRandomURL("http://randomfox.ca/floof/", "image"));
-	}
-	
+	}	
 
 }
