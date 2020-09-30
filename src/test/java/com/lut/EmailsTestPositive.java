@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.platform.runner.JUnitPlatform;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
@@ -23,9 +25,13 @@ import org.junit.runner.RunWith;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.io.FileHandler;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -35,6 +41,9 @@ public class EmailsTestPositive {
 
 	static WebDriver driver;
 	static String userEmail;
+	static String catImage;
+	static String dogImage;
+	static String foxImage;
 
 	@BeforeClass
 	static public void setUp() throws Exception {
@@ -98,14 +107,14 @@ public class EmailsTestPositive {
 		
 		//get urls 
 		GETImages urlImage = new GETImages();
-		String catImage = urlImage.getRandomURL("http://aws.random.cat/meow", "file");
-		String dogImage = urlImage.getRandomURL("https://random.dog/woof.json", "url");
-		String foxImage = urlImage.getRandomURL("http://randomfox.ca/floof/", "image");
+		catImage = urlImage.getRandomURL("http://aws.random.cat/meow", "file");
+		dogImage = urlImage.getRandomURL("https://random.dog/woof.json", "url");
+		foxImage = urlImage.getRandomURL("http://randomfox.ca/floof/", "image");
 		
 		driver.findElement(By.xpath("//div[@class=\"Am Al editable LW-avf tS-tW\"]")).sendKeys(catImage + "\n" + 
 				dogImage + "\n" + foxImage + "\n");
 		driver.findElement(By.xpath("//div[text()=\"Send\"]")).click();
-		new WebDriverWait(driver, 40)
+		new WebDriverWait(driver, 400)
 		    .until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[text()=\"Message sent.\"]")));
 		
 		//assertTrue(driver.findElement(By.xpath("//div[@class=\"vh\"]//span[@class=\"aT\"]")).isDisplayed(),true);
@@ -122,9 +131,32 @@ public class EmailsTestPositive {
 		driver.findElement(By.xpath("//li[@class=\"msg_item\"]")).click();
 		new WebDriverWait(driver, 40)
 			.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//iframe[@id=\"idIframe\"]")));
-		WebElement emailFrame = driver.findElement(By.xpath("//iframe[@id=\"idIframe\"]"));
-		//switch windows
+		
+		WebElement frameElement = driver.findElement(By.xpath("//iframe[@id=\"idIframe\"]"));
+		driver.switchTo().frame(frameElement);
 		new WebDriverWait(driver, 40)
-			.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[text()=\"' + catImage + '\"]'")));
+			.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[text()=\"" + catImage + "\"]")));
+		new WebDriverWait(driver, 40)
+			.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[text()=\"" + dogImage + "\"]")));
+		new WebDriverWait(driver, 40)
+			.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[text()=\"" + foxImage + "\"]")));
+		
+		 String catUrl = driver.findElement(By.xpath("//div[@dir=\"ltr\"]/a")).getAttribute("href");
+		 String dogUrl = driver.findElement(By.xpath("(//div[@dir=\"ltr\"]/div/a)[1]")).getAttribute("href");
+		 String foxUrl = driver.findElement(By.xpath("(//div[@dir=\"ltr\"]/div/a)[2]")).getAttribute("href");
+		 assertEquals(catUrl, catImage);
+		 assertEquals(dogUrl, dogImage);
+		 assertEquals(foxUrl, foxImage);
+	}
+	
+	@Order(4)
+	@Test
+	public void testSaveScreenShotsToFiles() throws WebDriverException, IOException {
+		
+		TakesScreenshot ts = (TakesScreenshot)driver;
+		Object outputType;
+		//copy image from memory to file on disk
+		FileHandler.copy(ts.getScreenshotAs(OutputType.FILE), new File("catImage.png"));
+	
 	}
 }
