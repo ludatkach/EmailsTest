@@ -36,7 +36,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-// @RunWith(JUnitPlatform.class)
 public class EmailsTestPositive {
 
 	static WebDriver driver;
@@ -76,11 +75,6 @@ public class EmailsTestPositive {
 	@Order(2)
 	@Test
 	public void testGmailLoginCreateLetterSendToGetnada() {
-		// open a new tab
-		// driver.findElement(By.cssSelector("body")).sendKeys(Keys.CONTROL + "t");
-		// ArrayList<String> tabs = new ArrayList<String>(driver.getWindowHandles());
-		// driver.switchTo().window(tabs.get(1));
-		//
 		driver.get("https://mail.google.com");
 		String gmailUserName = System.getenv("GMAILUSERNAME");
 		driver.findElement(By.xpath("//input[@id=\"identifierId\"]")).sendKeys(gmailUserName);
@@ -105,7 +99,6 @@ public class EmailsTestPositive {
 				.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name=\"subjectbox\"]")));
 		driver.findElement(By.xpath("//input[@name=\"subjectbox\"]")).sendKeys("My favorite animals");
 		
-		//get urls 
 		GETImages urlImage = new GETImages();
 		catImage = urlImage.getRandomURL("http://aws.random.cat/meow", "file");
 		dogImage = urlImage.getRandomURL("https://random.dog/woof.json", "url");
@@ -117,16 +110,14 @@ public class EmailsTestPositive {
 		new WebDriverWait(driver, 400)
 		    .until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[text()=\"Message sent.\"]")));
 		
-		//assertTrue(driver.findElement(By.xpath("//div[@class=\"vh\"]//span[@class=\"aT\"]")).isDisplayed(),true);
+		assertEquals(driver.findElement(By.xpath("//div[@class=\"vh\"]//span[@class=\"aT\"]")).isDisplayed(),true);
 	}
 	
 	@Order(3)
 	@Test
-	public void testGetnadaResiveAndCheckEmail() {
-//		Set<String> allWindowHandles = driver.getWindowHandles(); 
-//		allWindowHandles.SwitchTo("https://getnada.com");
+	public void testGetnadaRecieveAndCheckEmail() {
 		driver.get("https://getnada.com");
-		new WebDriverWait(driver, 40)
+		new WebDriverWait(driver, 15)
 			.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[@class=\"msg_item\"]")));
 		driver.findElement(By.xpath("//li[@class=\"msg_item\"]")).click();
 		new WebDriverWait(driver, 40)
@@ -149,14 +140,29 @@ public class EmailsTestPositive {
 		 assertEquals(foxUrl, foxImage);
 	}
 	
+	public void takeScreenShot(String url, String filename) throws WebDriverException, IOException {
+		driver.get(url);
+		TakesScreenshot ts = (TakesScreenshot)driver;
+		File f = ts.getScreenshotAs(OutputType.FILE);
+		FileHandler.copy(f, new File(filename));
+	}
+	
+		
 	@Order(4)
 	@Test
 	public void testSaveScreenShotsToFiles() throws WebDriverException, IOException {
 		
-		TakesScreenshot ts = (TakesScreenshot)driver;
-		Object outputType;
-		//copy image from memory to file on disk
-		FileHandler.copy(ts.getScreenshotAs(OutputType.FILE), new File("catImage.png"));
-	
+		takeScreenShot(catImage, "catImage.png");
+		File f = new File("catImage.png");
+		assertEquals(f.isFile(), true);
+		
+		takeScreenShot(dogImage, "dogImage.png");
+		f = new File("dogImage.png");
+		assertEquals(f.isFile(), true);
+		
+		takeScreenShot(foxImage, "foxImage.png");
+		f = new File("dogImage.png");
+		assertEquals(f.isFile(), true);
+		
 	}
 }
