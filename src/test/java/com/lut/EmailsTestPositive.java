@@ -152,7 +152,7 @@ public class EmailsTestPositive {
 	@Test
 	public void testSaveScreenShotsToFiles() throws WebDriverException, IOException {
 		
-		takeScreenShot(catImage, "catImage.png");
+		takeScreenShot(catImage, "catImage.png");		
 		File f = new File("catImage.png");
 		assertEquals(f.isFile(), true);
 		
