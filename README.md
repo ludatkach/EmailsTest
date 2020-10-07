@@ -19,7 +19,7 @@ The project created using Java13, Selenium WebDriver and JUnit5
 
 ## Run
 - Create gmail test account
-- Define the folloving environment variables:
+- Define the following environment variables:
 	GMAILUSERNAME, 
 	GMAILUSERPASSWORD
 - To run tests: 
