@@ -60,16 +60,22 @@ public class EmailsTestPositive {
 	@Test
 	public void testGetnadaCreateNewAccount() throws InterruptedException {
 		driver.get("https://getnada.com");
-		assertEquals("Nada - temp mail - fast and free", driver.getTitle());
-		driver.findElement(By.xpath("//i[@class=\"icon-plus\"]")).click();
-		String userName = driver.findElement(By.xpath("//input[@class=\"user_name\"]")).getAttribute("value");
-		driver.findElement(By.xpath("//input[@class=\"user_name\"]")).clear();
+		assertEquals("nada - Disposable Temp Email", driver.getTitle());
+//		driver.findElement(By.xpath("//i[@class=\"icon-plus\"]")).click();
+		driver.findElement(By.xpath("//li[@class=\"items-center\"]//button")).click();
+//		String userName = driver.findElement(By.xpath("//input[@class=\"user_name\"]")).getAttribute("value");
+		String userName = driver.findElement(By.xpath("//input[@id=\"grid-first-name\"]")).getAttribute("value");
+		driver.findElement(By.xpath("//input[@id=\"grid-first-name\"]")).clear();
+		String domain = driver.findElement(By.xpath("//select")).getAttribute("value");
 		Date seconds = new Date();
 		userName = userName + seconds.getTime();
-		userEmail = userName + "@getnada.com";
-		driver.findElement(By.xpath("//input[@class=\"user_name\"]")).sendKeys(userName);
-		driver.findElement(By.xpath("//a[@class=\"button success\"]")).click();
-		assertEquals(driver.findElement(By.xpath("//a[@class=\" is-active\"]//span")).getText(), userEmail);
+//		userEmail = userName + "@getnada.com";
+		userEmail = userName + "@" + domain;
+		driver.findElement(By.xpath("//input[@id=\"grid-first-name\"]")).sendKeys(userName);
+//		driver.findElement(By.xpath("//a[@class=\"button success\"]")).click();
+		driver.findElement(By.xpath("//form/button[@type=\"button\"]")).click();
+//		assertEquals(driver.findElement(By.xpath("//a[@class=\" is-active\"]//span")).getText(), userEmail);
+		assertEquals(driver.findElement(By.xpath("//p[@class=\"p-3\"]")).getText(), "waiting for incoming emails for " + userEmail);
 	}
 
 	@Order(2)
