@@ -92,7 +92,7 @@ public class EmailsTestPositive {
 		driver.findElement(By.xpath("//input[@class=\"whsOnd zHQkBf\"]")).sendKeys(gmailUserPassword);
 		driver.findElement(By.xpath("//div[@class=\"VfPpkd-RLmnJb\"]")).click();
 		new WebDriverWait(driver, 40)
-				.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//img[@class=\"gb_va\"]")));
+				.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//img[@class=\"gb_uc\"]")));
 		WebElement element = new WebDriverWait(driver, 15)
 				.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class=\"T-I T-I-KE L3\"]")));
 		element.click();
